@@ -17,7 +17,7 @@ void draw() {
 // Programmer: Purin Petch-in
 //
 // Description: call updateWorld method when key is release
-// 
+//
 /////////////////////////////////////////////////////
 void keyReleased(){
   myRobotWorld.updateWorld();
@@ -28,6 +28,15 @@ class Robot {
   float heightPerBlock, widthPerBlock;  //Set height,wieght per block and degree as attribute
 
   Robot(int row, int column, int size, float widthPerBlock, float heightPerBlock, int direction) {
+
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: Insert row,column size and  width,heightPerblock
+    //
+    /////////////////////////////////////////////////////
+
     this.row = row;
     this.column = column;
     this.size = size;
@@ -41,7 +50,7 @@ class Robot {
   // Programmer: Purin Petch-in
   //
   // Description: move robot depend on where it point
-  // 
+  //
   /////////////////////////////////////////////////////
   void move() {    //move method to move depend on how it look
      if (direction == 1) {
@@ -64,7 +73,7 @@ class Robot {
   // Programmer: Purin Petch-in
   //
   // Description: make robot turn left (change direction)
-  // 
+  //
   /////////////////////////////////////////////////////
   void turnLeft() {
     if (direction == 1){
@@ -73,13 +82,13 @@ class Robot {
       direction -= 1;
     }
   }
-  
+
   /////////////////////////////////////////////////////
   //
   // Programmer: Purin Petch-in
   //
   // Description: make robot turn right (change direction)
-  // 
+  //
   /////////////////////////////////////////////////////
   void turnRight() {
     if (direction == 4) {
@@ -93,9 +102,9 @@ class Robot {
   //
   // Programmer: Purin Petch-in
   //
-  // Description: draw robot depend on direction, direction = 1 is when robot point to east, direction = 2 when robot point to south 
+  // Description: draw robot depend on direction, direction = 1 is when robot point to east, direction = 2 when robot point to south
   //              direction = 3 is when robot point to west and direction = 4 is when robot point to north
-  // 
+  //
   /////////////////////////////////////////////////////
   void drawRobot() {   //draw robot
     stroke(155, 100, 255);
@@ -126,7 +135,7 @@ class Robot {
   int getColumn() {
     return column;
   }
-  
+
   float getDirection() {
     return direction;
   }
@@ -138,6 +147,13 @@ class Wall {
 
 
   Wall(int row, int column, int size, float widthPerBlock, float heightPerBlock) {
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: insert row and column size and width and height per block that calculated from world
+    //
+    /////////////////////////////////////////////////////
     this.row = row;
     this.column = column;
     this.size = size;
@@ -146,6 +162,13 @@ class Wall {
   }
 
   void drawWall() {
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: draw Wall that depend on row and column
+    //
+    /////////////////////////////////////////////////////
     fill(100, 100, 80);
     rect(widthPerBlock*row+2, heightPerBlock*column+2, widthPerBlock-2, heightPerBlock-2);    //fill the block
   }
@@ -164,6 +187,13 @@ class Objective {
   float widthPerBlock, heightPerBlock;  //Set width,height per block as attribute
 
   Objective(int row, int column, int size, float widthPerBlock, float heightPerBlock) {
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description:  insert row and column size and width and height per block that calculated from world
+    //
+    /////////////////////////////////////////////////////
     this.row = row;
     this.column = column;
     this.size = size;
@@ -173,6 +203,13 @@ class Objective {
 
 
   void drawObjective() {
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: draw Wall that depend on row and column
+    //
+    /////////////////////////////////////////////////////
     fill(255, 100, 80); //fill red
     ellipse(widthPerBlock*row + widthPerBlock/2, heightPerBlock*column + heightPerBlock/2, size, size); //draw circle object
   }
@@ -187,6 +224,7 @@ class Objective {
 }
 
 class World {
+
   int row, column; //set row, column as attribute
   float widthPerBlock;  //set height,width as attribute
   float heightPerBlock;
@@ -200,6 +238,15 @@ class World {
 
 
   World(int row, int column) {
+
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: ThatphumCpre
+  //
+  // Description: insert row and column and calculated width,heightPerBlock to instance Robot,Objective,Wall
+  //
+  /////////////////////////////////////////////////////
+
     this.row = row;
     this.column = column;
     heightPerBlock = height/column; //calculate height,width per block
@@ -228,8 +275,8 @@ class World {
 // Programmer: (Thannathorn Somton)
 //
 // Description: (load from savedfile if cannot it will load default)
-// 
-/////////////////////////////////////////////////////  
+//
+/////////////////////////////////////////////////////
   World(String name){
     BufferedReader reader = createReader(name);
     String line = null;
@@ -259,7 +306,7 @@ class World {
     if(count != 27){
       load = false;
     }
-    
+
     this.row = load_data[0][0];
     this.column = load_data[0][1];
     heightPerBlock = height/load_data[0][1]; //calculate height,width per block
@@ -294,12 +341,21 @@ class World {
         Input = new InputProcessor(Key[0], Key[1], Key[2]);
       }
     }
-    
-    
-    
+
+
+
   }
 
   void drawLine() { //draw line
+
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: ThatphumCpre
+  //
+  // Description: draw gridline and from calculated world
+  //
+  /////////////////////////////////////////////////////
+
     fill(255);
     for (int i = 0; i<=row; i++) {
       rect(widthPerBlock*i, 0, 2, height);  //draw horizontal line
@@ -310,6 +366,15 @@ class World {
   }
 
   void drawWorld() {
+
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: ThatphumCpre
+  //
+  // Description: draw all component that Instanced
+  //
+  /////////////////////////////////////////////////////
+
     for (Wall eachWall : myWall) {
       eachWall.drawWall();        //draw each wall
     }
@@ -322,7 +387,7 @@ class World {
   // Programmer: Purin Petch-in
   //
   // Description: call checkMove from keyprocessor to check input and if robot is on target restart and save game
-  // 
+  //
   /////////////////////////////////////////////////////
   void updateWorld(){
     Input.checkMove(key, row, column, myRobot, myWall, 20);
@@ -334,16 +399,16 @@ class World {
 // Programmer: (Thannathorn Somton)
 //
 // Description: (save file)
-// 
-/////////////////////////////////////////////////////   
+//
+/////////////////////////////////////////////////////
   void saveGame(){
     PrintWriter output;
-    output = createWriter("SaveWorld.txt"); 
+    output = createWriter("SaveWorld.txt");
     output.println(this.row+","+this.column);
     output.println(myRobot.row+","+myRobot.column);
     output.println(myObjective.row+","+myObjective.column);
     for (Wall eachWall : myWall) {
-      output.println(eachWall.row+","+eachWall.column);      
+      output.println(eachWall.row+","+eachWall.column);
     }
     output.println(myRobot.getDirection()+","+0);
     output.println("Move="+Input.getMoveKey());
@@ -357,8 +422,8 @@ class World {
 // Programmer: (Thannathorn Somton)
 //
 // Description: (target check)
-// 
-/////////////////////////////////////////////////////   
+//
+/////////////////////////////////////////////////////
   boolean targetCheck(){
     if (myRobot.row == myObjective.row && myRobot.column == myObjective.column){
       return true;
@@ -370,27 +435,27 @@ class World {
 // Programmer: (Thannathorn Somton)
 //
 // Description: (restart game)
-// 
-///////////////////////////////////////////////////// 
+//
+/////////////////////////////////////////////////////
   void restartGame(){
     myRobotWorld = new World(12,12);
   }
 }
 
-class InputProcessor { 
+class InputProcessor {
   char moveKey, turnLeftKey, turnRightKey;
   InputProcessor(char move, char turnLeft, char turnRight){
     this.moveKey = move;
     this.turnLeftKey = turnLeft;
     this.turnRightKey = turnRight;
   }
-  
+
   /////////////////////////////////////////////////////
   //
   // Programmer: Purin Petch-in
   //
   // Description: check input if it the move or turn key it will make robot move (if infront of robot is wall or edge it can't move forward)
-  // 
+  //
   /////////////////////////////////////////////////////
   void checkMove(char inputKey, int worldRow, int worldColumn, Robot robot, Wall[] wall, int maxWall){
     if (inputKey == moveKey) {
@@ -421,15 +486,15 @@ class InputProcessor {
       robot.turnRight();
     }
   }
-  
+
   char getMoveKey(){
     return moveKey;
   }
-  
+
   char getLeftKey(){
     return turnLeftKey;
   }
-  
+
   char getRightKey(){
     return turnRightKey;
   }
