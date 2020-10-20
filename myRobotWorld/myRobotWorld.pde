@@ -223,7 +223,13 @@ class World {
       Input = new InputProcessor(Key[0], Key[1], Key[2]);
      }
   }
-  
+/////////////////////////////////////////////////////
+//
+// Programmer: (Thannathorn Somton)
+//
+// Description: (load from savedfile if cannot it will load default)
+// 
+/////////////////////////////////////////////////////  
   World(String name){
     BufferedReader reader = createReader(name);
     String line = null;
@@ -323,7 +329,13 @@ class World {
     if(targetCheck()){restartGame();}
     saveGame();
   }
-  
+/////////////////////////////////////////////////////
+//
+// Programmer: (Thannathorn Somton)
+//
+// Description: (save file)
+// 
+/////////////////////////////////////////////////////   
   void saveGame(){
     PrintWriter output;
     output = createWriter("SaveWorld.txt"); 
@@ -340,14 +352,26 @@ class World {
     output.flush();
     output.close();
   }
-  
+/////////////////////////////////////////////////////
+//
+// Programmer: (Thannathorn Somton)
+//
+// Description: (target check)
+// 
+/////////////////////////////////////////////////////   
   boolean targetCheck(){
     if (myRobot.row == myObjective.row && myRobot.column == myObjective.column){
       return true;
     }
     return false;
   }
-
+/////////////////////////////////////////////////////
+//
+// Programmer: (Thannathorn Somton)
+//
+// Description: (restart game)
+// 
+///////////////////////////////////////////////////// 
   void restartGame(){
     myRobotWorld = new World(12,12);
   }
