@@ -12,6 +12,13 @@ void draw() {
   myRobotWorld.drawWorld();     //Draw all of World
 }
 
+/////////////////////////////////////////////////////
+//
+// Programmer: Purin Petch-in
+//
+// Description: call updateWorld method when key is release
+// 
+/////////////////////////////////////////////////////
 void keyReleased(){
   myRobotWorld.updateWorld();
 }
@@ -29,6 +36,13 @@ class Robot {
     this.direction = direction;
   }
 
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: Purin Petch-in
+  //
+  // Description: move robot depend on where it point
+  // 
+  /////////////////////////////////////////////////////
   void move() {    //move method to move depend on how it look
      if (direction == 1) {
       //print(row);
@@ -45,6 +59,13 @@ class Robot {
     }
   }
 
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: Purin Petch-in
+  //
+  // Description: make robot turn left (change direction)
+  // 
+  /////////////////////////////////////////////////////
   void turnLeft() {
     if (direction == 1){
       direction = 4;
@@ -53,6 +74,13 @@ class Robot {
     }
   }
   
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: Purin Petch-in
+  //
+  // Description: make robot turn right (change direction)
+  // 
+  /////////////////////////////////////////////////////
   void turnRight() {
     if (direction == 4) {
       direction = 1;
@@ -61,6 +89,14 @@ class Robot {
     }
   }
 
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: Purin Petch-in
+  //
+  // Description: draw robot depend on direction, direction = 1 is when robot point to east, direction = 2 when robot point to south 
+  //              direction = 3 is when robot point to west and direction = 4 is when robot point to north
+  // 
+  /////////////////////////////////////////////////////
   void drawRobot() {   //draw robot
     stroke(155, 100, 255);
     strokeWeight(2.5);
@@ -275,6 +311,13 @@ class World {
     myRobot.drawRobot();     //draw robot
   }
 
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: Purin Petch-in
+  //
+  // Description: call checkMove from keyprocessor to check input and if robot is on target restart and save game
+  // 
+  /////////////////////////////////////////////////////
   void updateWorld(){
     Input.checkMove(key, row, column, myRobot, myWall, 20);
     if(targetCheck()){restartGame();}
@@ -310,7 +353,7 @@ class World {
   }
 }
 
-class InputProcessor {
+class InputProcessor { 
   char moveKey, turnLeftKey, turnRightKey;
   InputProcessor(char move, char turnLeft, char turnRight){
     this.moveKey = move;
@@ -318,6 +361,13 @@ class InputProcessor {
     this.turnRightKey = turnRight;
   }
   
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: Purin Petch-in
+  //
+  // Description: check input if it the move or turn key it will make robot move (if infront of robot is wall or edge it can't move forward)
+  // 
+  /////////////////////////////////////////////////////
   void checkMove(char inputKey, int worldRow, int worldColumn, Robot robot, Wall[] wall, int maxWall){
     if (inputKey == moveKey) {
       for (int i = 0; i<maxWall; i++) {
