@@ -1,13 +1,22 @@
 World myRobotWorld;  //Set myRobotWorld as object of World
+Flowchart myFlowchart = new Flowchart();
 
 void setup() {
   size(720, 720);
-  myRobotWorld = new World("SaveWorld.txt");
+  myRobotWorld = new World(12,12);
+  Flowchart mySub = new Flowchart(); 
+  myFlowchart.addIFcommand("isBlocked()", "turnLeft()", "move()");
+
+  mySub.addIFcommand("isBlocked()", "turnLeft()", "move()");
+  myFlowchart.addFalseCommand(mySub);
+  myFlowchart.addFalseCommand("turnRight()");
+  
 }
 
 void draw() {
   background(40);  //Draw black background
   noStroke();
+  myRobotWorld.doFlowchart(myFlowchart);  //do flowchart that create 
   myRobotWorld.drawLine();      //Draw World line
   myRobotWorld.drawWorld();     //Draw all of World
 }
@@ -19,7 +28,7 @@ void draw() {
 // Description: call updateWorld method when key is release
 //
 /////////////////////////////////////////////////////
-void keyReleased(){
+void keyReleased() {
   myRobotWorld.updateWorld();
 }
 
@@ -53,7 +62,7 @@ class Robot {
   //
   /////////////////////////////////////////////////////
   void move() {    //move method to move depend on how it look
-     if (direction == 1) {
+    if (direction == 1) {
       //print(row);
       row += 1;
     } else if (direction == 3) {
@@ -76,7 +85,7 @@ class Robot {
   //
   /////////////////////////////////////////////////////
   void turnLeft() {
-    if (direction == 1){
+    if (direction == 1) {
       direction = 4;
     } else {
       direction -= 1;
@@ -90,6 +99,7 @@ class Robot {
   // Description: make robot turn right (change direction)
   //
   /////////////////////////////////////////////////////
+
   void turnRight() {
     if (direction == 4) {
       direction = 1;
@@ -235,23 +245,25 @@ class World {
   Objective myObjective;  //set myObject that is Objective object as attribute
   Wall[] myWall;         //set myWall that is Wall[] object as attribute
   InputProcessor Input;
-
+  int totalWall =20;
+  Node lastAccess;
+  boolean turn = true; 
 
   World(int row, int column) {
 
-  /////////////////////////////////////////////////////
-  //
-  // Programmer: ThatphumCpre
-  //
-  // Description: insert row and column and calculated width,heightPerBlock to instance Robot,Objective,Wall
-  //
-  /////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: insert row and column and calculated width,heightPerBlock to instance Robot,Objective,Wall
+    //
+    /////////////////////////////////////////////////////
 
     this.row = row;
     this.column = column;
     heightPerBlock = height/column; //calculate height,width per block
     widthPerBlock = width/row;
-    myRobot = new Robot(1, 2, 40, widthPerBlock, heightPerBlock,1);    //instance myRobot at 1,2 size =40 ,and send width,heigh per block
+    myRobot = new Robot(1, 2, 40, widthPerBlock, heightPerBlock, 1);    //instance myRobot at 1,2 size =40 ,and send width,heigh per block
     myObjective =  new Objective(11, 11, 40, widthPerBlock, heightPerBlock); //instance myObject at 11,11 size =40 ,and send width,heigh per block
     myWall = new Wall[20];  //Initialization Wall array
     for (int i=0; i<20; i++) {
@@ -259,36 +271,35 @@ class World {
       int y = (int)random(0, 12);
       if (x != myRobot.getRow() && y != myRobot.getColumn() && x != myObjective.getRow() && y != myObjective.getColumn() ) {
         myWall[i] = new Wall(x, y, 40, widthPerBlock, heightPerBlock); //random wall position
-      }
-      else{
-      i--;
+      } else {
+        i--;
       }
     }
     if (Key[0] == 0) {
       Input = new InputProcessor('w', 'a', 'd');
-    }else {
+    } else {
       Input = new InputProcessor(Key[0], Key[1], Key[2]);
-     }
+    }
   }
-/////////////////////////////////////////////////////
-//
-// Programmer: (Thannathorn Somton)
-//
-// Description: (load from savedfile if cannot it will load default)
-//
-/////////////////////////////////////////////////////
-  World(String name){
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: (Thannathorn Somton)
+  //
+  // Description: (load from savedfile if cannot it will load default)
+  //
+  /////////////////////////////////////////////////////
+  World(String name) {
     BufferedReader reader = createReader(name);
     String line = null;
     int count = 0;
     try {
       while ((line = reader.readLine()) != null) {
         if (count < 24) {
-          String[] pieces = split(line,",");
+          String[] pieces = split(line, ",");
           load_data[count][0] = int(pieces[0]);
           load_data[count][1] = int(pieces[1]);
         } else {
-          String[] pieces = split(line,"=");
+          String[] pieces = split(line, "=");
           Key[count-24] = pieces[1].charAt(0);
         }
         count++;
@@ -303,7 +314,7 @@ class World {
       e.printStackTrace();
       load = false;
     }
-    if(count != 27){
+    if (count != 27) {
       load = false;
     }
 
@@ -311,18 +322,17 @@ class World {
     this.column = load_data[0][1];
     heightPerBlock = height/load_data[0][1]; //calculate height,width per block
     widthPerBlock = width/load_data[0][0];
-    if(load){
-      myRobot = new Robot(load_data[1][0],load_data[1][1], 40, widthPerBlock, heightPerBlock,load_data[23][0]);    //instance myRobot at 1,2 size =40 ,and send width,heigh per block
-      myObjective =  new Objective(load_data[2][0],load_data[2][0], 40, widthPerBlock, heightPerBlock); //instance myObject at 11,11 size =40 ,and send width,heigh per block
+    if (load) {
+      myRobot = new Robot(load_data[1][0], load_data[1][1], 40, widthPerBlock, heightPerBlock, load_data[23][0]);    //instance myRobot at 1,2 size =40 ,and send width,heigh per block
+      myObjective =  new Objective(load_data[2][0], load_data[2][0], 40, widthPerBlock, heightPerBlock); //instance myObject at 11,11 size =40 ,and send width,heigh per block
       myWall = new Wall[20];  //Initialization Wall array
       for (int i=3; i<23; i++) {
-        myWall[i-3] = new Wall(load_data[i][0],load_data[i][1] , 40, widthPerBlock, heightPerBlock); //random wall position
+        myWall[i-3] = new Wall(load_data[i][0], load_data[i][1], 40, widthPerBlock, heightPerBlock); //random wall position
       }
       Input = new InputProcessor(Key[0], Key[1], Key[2]);
       load = false;
-    }
-    else{
-      myRobot = new Robot(1, 2, 40, widthPerBlock, heightPerBlock,1);    //instance myRobot at 1,2 size =40 ,and send width,heigh per block
+    } else {
+      myRobot = new Robot(1, 2, 40, widthPerBlock, heightPerBlock, 1);    //instance myRobot at 1,2 size =40 ,and send width,heigh per block
       myObjective =  new Objective(11, 11, 40, widthPerBlock, heightPerBlock); //instance myObject at 11,11 size =40 ,and send width,heigh per block
       myWall = new Wall[20];  //Initialization Wall array
       for (int i=0; i<20; i++) {
@@ -330,9 +340,8 @@ class World {
         int y = (int)random(0, 12);
         if (x != myRobot.getRow() && y != myRobot.getColumn() && x != myObjective.getRow() && y != myObjective.getColumn() ) {
           myWall[i] = new Wall(x, y, 40, widthPerBlock, heightPerBlock); //random wall position
-        }
-        else{
-        i--;
+        } else {
+          i--;
         }
       }
       if (Key[0] == 0) {
@@ -341,21 +350,18 @@ class World {
         Input = new InputProcessor(Key[0], Key[1], Key[2]);
       }
     }
-
-
-
   }
 
   void drawLine() { //draw line
 
-  /////////////////////////////////////////////////////
-  //
-  // Programmer: ThatphumCpre
-  //
-  // Description: draw gridline and from calculated world
-  //
-  /////////////////////////////////////////////////////
-
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: draw gridline and from calculated world
+    //
+    /////////////////////////////////////////////////////
+    noStroke();
     fill(255);
     for (int i = 0; i<=row; i++) {
       rect(widthPerBlock*i, 0, 2, height);  //draw horizontal line
@@ -367,13 +373,13 @@ class World {
 
   void drawWorld() {
 
-  /////////////////////////////////////////////////////
-  //
-  // Programmer: ThatphumCpre
-  //
-  // Description: draw all component that Instanced
-  //
-  /////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: draw all component that Instanced
+    //
+    /////////////////////////////////////////////////////
 
     for (Wall eachWall : myWall) {
       eachWall.drawWall();        //draw each wall
@@ -389,19 +395,22 @@ class World {
   // Description: call checkMove from keyprocessor to check input and if robot is on target restart and save game
   //
   /////////////////////////////////////////////////////
-  void updateWorld(){
+  void updateWorld() {
     Input.checkMove(key, row, column, myRobot, myWall, 20);
-    if(targetCheck()){restartGame();}
+    if (targetCheck()) {
+      restartGame();
+    }
     saveGame();
+    println(isBlocked());
   }
-/////////////////////////////////////////////////////
-//
-// Programmer: (Thannathorn Somton)
-//
-// Description: (save file)
-//
-/////////////////////////////////////////////////////
-  void saveGame(){
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: (Thannathorn Somton)
+  //
+  // Description: (save file)
+  //
+  /////////////////////////////////////////////////////
+  void saveGame() {
     PrintWriter output;
     output = createWriter("SaveWorld.txt");
     output.println(this.row+","+this.column);
@@ -417,34 +426,125 @@ class World {
     output.flush();
     output.close();
   }
-/////////////////////////////////////////////////////
-//
-// Programmer: (Thannathorn Somton)
-//
-// Description: (target check)
-//
-/////////////////////////////////////////////////////
-  boolean targetCheck(){
-    if (myRobot.row == myObjective.row && myRobot.column == myObjective.column){
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: (Thannathorn Somton)
+  //
+  // Description: (target check)
+  //
+  /////////////////////////////////////////////////////
+  boolean targetCheck() {
+    if (myRobot.row == myObjective.row && myRobot.column == myObjective.column) {
       return true;
     }
     return false;
   }
-/////////////////////////////////////////////////////
-//
-// Programmer: (Thannathorn Somton)
-//
-// Description: (restart game)
-//
-/////////////////////////////////////////////////////
-  void restartGame(){
-    myRobotWorld = new World(12,12);
+  /////////////////////////////////////////////////////
+  //
+  // Programmer: (Thannathorn Somton)
+  //
+  // Description: (restart game)
+  //
+  /////////////////////////////////////////////////////
+  void restartGame() {
+    myRobotWorld = new World(12, 12);
   }
+
+  boolean isBlocked() {
+
+    for (int i = 0; i<totalWall; i++) {
+      if (myRobot.getDirection() == 1 && myRobot.getRow()+1 == myWall[i].getRow() && myRobot.getColumn() == myWall[i].getColumn()) {
+        return true;
+      } else if (myRobot.getDirection() == 3 && myRobot.getRow()-1 == myWall[i].getRow() && myRobot.getColumn() == myWall[i].getColumn()) {
+        return true;
+      } else if (myRobot.getDirection() == 2 && myRobot.getRow() == myWall[i].getRow() && myRobot.getColumn()+1 == myWall[i].getColumn()) {
+        return true;
+      } else if (myRobot.getDirection() == 4 && myRobot.getRow() == myWall[i].getRow() && myRobot.getColumn()-1 == myWall[i].getColumn()) {
+        return true;
+      } else if (myRobot.getDirection() == 1 && myRobot.getRow()+1 == row) {
+        return true;
+      } else if (myRobot.getDirection() == 3 && myRobot.getRow()-1 < 0) {
+        return true;
+      } else if (myRobot.getDirection() == 2 && myRobot.getColumn()+1 == column) {
+        return true;
+      } else if (myRobot.getDirection() == 4 && myRobot.getColumn()-1 < 0) {
+        return true;
+      } else if (i == 19) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  void doFlowchart(Flowchart myFlow) {
+   if (frameCount >50) { //delay time before start 
+      getFlow(lastAccess);  //find next node to do 
+      if (lastAccess != null) {  //if have command to do 
+        doCommand(lastAccess.command); //then do that belong to command 
+      }
+      else {
+        if(myFlow.lastIF.endTrueNode.right == null){   //is node is empty 
+        lastAccess = myFlow.data;    //restart node to do again 
+        turn = true;          //reset turn of flowchart
+        println();
+        println("Start Agian");
+        }
+        else{
+          lastAccess = myFlow.lastIF.endTrueNode;  //if have something to do affter then then do next is endTrueNode
+        }
+      }
+    }
+  }
+
+  void getFlow(Node args) {
+    if (args != null ) { //if argument node is not empty then 
+      if (args.ifType == false && turn  ) { //if turn true line 
+        Node temp = lastAccess.right;   //next node is right node 
+        lastAccess = temp;
+      } else if (args.ifType == false && !turn  ) {  //if turn is false line  then 
+        Node temp = lastAccess.left;  //next node is left node 
+        lastAccess = temp;
+      } else if (lastAccess.ifType == true && lastAccess.command.equals("IF isBlocked()" )   ) {
+        turn= this.isBlocked();  //calculate turn to collect 
+        if (turn == false) {    //if turn is false line then 
+          Node temp = lastAccess.left; //next node is left node 
+          lastAccess = temp;
+        } else if (turn) {      //if turn is true line then 
+          Node temp = lastAccess.right;    //next node is right node
+          lastAccess = temp;
+        }
+      }
+      println(args.command);
+    }
+  }
+
+
+  void doCommand(String args) {
+    
+    background(40);    //redraw background 
+    this.drawLine();   //redraw grid line 
+    if (args.equals("turnLeft()")) {   //if it's  turnLeft then do it  and redraw
+      myRobot.turnLeft();
+      this.drawWorld();
+    } 
+    else if (args.equals("turnRight()")) { //if it is turnRight() then do it  and redraw
+      myRobot.turnRight();
+      this.drawWorld();
+    } 
+    else if (args.equals("move()"))  //if it is turnLeft() then do it and re draw
+    {
+      if (isBlocked()==false) {   
+        myRobot.move();
+        this.drawWorld();
+      }
+    }
+    delay(800);  //delay to do next
+  }  
 }
 
 class InputProcessor {
   char moveKey, turnLeftKey, turnRightKey;
-  InputProcessor(char move, char turnLeft, char turnRight){
+  InputProcessor(char move, char turnLeft, char turnRight) {
     this.moveKey = move;
     this.turnLeftKey = turnLeft;
     this.turnRightKey = turnRight;
@@ -457,7 +557,7 @@ class InputProcessor {
   // Description: check input if it the move or turn key it will make robot move (if infront of robot is wall or edge it can't move forward)
   //
   /////////////////////////////////////////////////////
-  void checkMove(char inputKey, int worldRow, int worldColumn, Robot robot, Wall[] wall, int maxWall){
+  void checkMove(char inputKey, int worldRow, int worldColumn, Robot robot, Wall[] wall, int maxWall) {
     if (inputKey == moveKey) {
       for (int i = 0; i<maxWall; i++) {
         if (robot.getDirection() == 1 && robot.getRow()+1 == wall[i].getRow() && robot.getColumn() == wall[i].getColumn()) {
@@ -487,15 +587,15 @@ class InputProcessor {
     }
   }
 
-  char getMoveKey(){
+  char getMoveKey() {
     return moveKey;
   }
 
-  char getLeftKey(){
+  char getLeftKey() {
     return turnLeftKey;
   }
 
-  char getRightKey(){
+  char getRightKey() {
     return turnRightKey;
   }
 }
