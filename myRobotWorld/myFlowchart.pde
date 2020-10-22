@@ -1,4 +1,12 @@
 class Node {
+  
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: Node to collect string values and implement binary tree
+    //
+    /////////////////////////////////////////////////////
 
   String command = null;  //Set command as attribute to collect command 
   boolean ifType;          //Set ifType to collect is it "IF" in flowchart
@@ -14,6 +22,15 @@ class Node {
   }
 
   Node(String condition, String trueCommand, String falseCommand) { //Add if Node 
+  
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: Instance with if condition to Binary Tree 
+    //
+    /////////////////////////////////////////////////////
+    
     command = "IF "+condition;      //give command condition to attribute 
     ifType = true;                  //give this node as "if" node
     left = new Node(falseCommand);  //create left node
@@ -22,6 +39,14 @@ class Node {
   }
 
   Node addRight(Node currentNode, String cmd) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add String command to most right node 
+    //
+    /////////////////////////////////////////////////////
     
     Node temp;
     if ( currentNode.right == null ) {      //if last node then create node
@@ -35,6 +60,15 @@ class Node {
   }
 
   void addRight(Node currentNode, Node subTree) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add SubTree to most right node
+    //
+    /////////////////////////////////////////////////////
+    
     if (currentNode.right == null) {
       currentNode.right = subTree;    //if right note is not empty put subTree to empty node 
     } else {
@@ -43,6 +77,15 @@ class Node {
   }
 
   void addLeft(Node currentNode, String cmd) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add command to most left node 
+    //
+    /////////////////////////////////////////////////////    
+    
     if (currentNode.left == null) {
       currentNode.left = new Node(cmd);  //if right node is empty create a new node
     } else {
@@ -51,6 +94,15 @@ class Node {
   }
 
   void addLeft(Node currentNode, Node subTree) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add node to most left Node 
+    //
+    /////////////////////////////////////////////////////
+    
     if (currentNode.left == null) {     
       currentNode.left = subTree;   //if right node is not empty put subTree to empty node 
     } else {
@@ -62,6 +114,15 @@ class Node {
 }
 
 class Flowchart {
+  
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: implement binary tree to flowchart
+    //
+    /////////////////////////////////////////////////////
+    
   Node data;      //Set data as attribute to collect Node or Binary tree 
   Node lastIF;    //Collect last if node that was create 
 
@@ -70,6 +131,15 @@ class Flowchart {
   }
 
   void addCommand(String args) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add command args to binary tree
+    //
+    /////////////////////////////////////////////////////
+    
     if (data.command == null) {  //if first node is empty then 
       data.command = args;   //add command 
     } else {
@@ -78,6 +148,15 @@ class Flowchart {
   }
 
   void addCommand(Flowchart subFlow) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add subFlowchart or sub Binary Tree to Main Tree
+    //
+    /////////////////////////////////////////////////////
+    
     if ( data.command == null) {  //if first node is empty then
       data = subFlow.data;      //put sub Binary tree instead old data 
     } else {
@@ -87,24 +166,69 @@ class Flowchart {
   }
 
   void addFalseCommand(String args) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add False command to last if that was create
+    //
+    /////////////////////////////////////////////////////
+    
     lastIF.addLeft(lastIF, args);   //add command to most left from lastIF node 
   }
 
   void addFalseCommand(Flowchart subFlow) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add False command to alst if that was create 
+    //
+    /////////////////////////////////////////////////////
+    
     lastIF.addLeft(lastIF, subFlow.data);  //add sub Binary Tree to most left from lastIF node 
   }
   
   void addTrueCommand(String args){
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add True command to a last if node that was  create
+    //
+    /////////////////////////////////////////////////////
+    
     Node temp = lastIF.addRight(lastIF,args);  //add command to most right from lastIF node and collect to temp
     lastIF.endTrueNode = temp;      //add new end node that was created
   }
   
   void addTrueCommand(Flowchart subFlow){
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add True command to a last if node that was create 
+    //
+    /////////////////////////////////////////////////////
+    
     lastIF.addRight(lastIF, subFlow.data); //add subBinart Tree to most right from lastIF node 
   }
 
 
   void addIFcommand(String condition, String trueCommand, String falseCommand) { 
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add if command to most right node
+    //
+    /////////////////////////////////////////////////////
+    
     Node temp = new Node(condition, trueCommand, falseCommand); //add if command 
     lastIF = temp;                
     if (data.command != null ) {
@@ -115,6 +239,15 @@ class Flowchart {
   }
 
   void addIFcommand(String condition, Flowchart trueCommand, Flowchart falseCommand) {
+    
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: add if command from subTree
+    //
+    /////////////////////////////////////////////////////
+    
     Flowchart temp = new Flowchart();  //create temp flowchart
     temp.addCommand(condition);    //add command condition
     temp.data.right = trueCommand.data;    //put right as true sub Binary Tree
@@ -123,6 +256,14 @@ class Flowchart {
   }
 
   void getFlow() {
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: view all command node that not null
+    //
+    /////////////////////////////////////////////////////
+    
     getFlow(this.data);
   }
 

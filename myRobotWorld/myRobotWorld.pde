@@ -477,6 +477,13 @@ class World {
   }
 
   void doFlowchart(Flowchart myFlow) {
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: let robot do from input Flowchart
+    //
+    /////////////////////////////////////////////////////
    if (frameCount >50) { //delay time before start 
       getFlow(lastAccess);  //find next node to do 
       if (lastAccess != null) {  //if have command to do 
@@ -497,6 +504,13 @@ class World {
   }
 
   void getFlow(Node args) {
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: find next node that can do 
+    //
+    /////////////////////////////////////////////////////
     if (args != null ) { //if argument node is not empty then 
       if (args.ifType == false && turn  ) { //if turn true line 
         Node temp = lastAccess.right;   //next node is right node 
@@ -520,6 +534,13 @@ class World {
 
 
   void doCommand(String args) {
+    /////////////////////////////////////////////////////
+    //
+    // Programmer: ThatphumCpre
+    //
+    // Description: Make robot do from string argument 
+    //
+    /////////////////////////////////////////////////////
     
     background(40);    //redraw background 
     this.drawLine();   //redraw grid line 
