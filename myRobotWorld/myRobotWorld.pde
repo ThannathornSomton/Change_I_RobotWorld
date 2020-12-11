@@ -4,13 +4,16 @@ Flowchart myFlowchart = new Flowchart();
 void setup() {
   size(720, 720);
   myRobotWorld = new World(12,12);
-  Flowchart mySub = new Flowchart(); 
-  myFlowchart.addIFcommand("isBlocked()", "turnLeft()", "move()");
+  //Flowchart mySub = new Flowchart();
+  myFlowchart.addWHILEcommand("isBlocked()", "turnLeft()");
+  myFlowchart.addFalseCommand("move()");
+  //myFlowchart.addIFcommand("isBlocked()", "turnLeft()", "move()");
 
-  mySub.addIFcommand("isBlocked()", "turnLeft()", "move()");
-  myFlowchart.addFalseCommand(mySub);
-  myFlowchart.addFalseCommand("turnRight()");
-  
+  myFlowchart.addTrueCommand("turnRight()"); 
+  myFlowchart.addTrueCommand("turnLeft()");
+  myFlowchart.addTrueCommand("turnRight()");
+  //mySub.addIFcommand("isBlocked()", "turnLeft()", "move()");
+  //myFlowchart.addTrueCommand(mySub);
 }
 
 void draw() {
@@ -247,7 +250,8 @@ class World {
   InputProcessor Input;
   int totalWall =20;
   Node lastAccess;
-  boolean turn = true; 
+  boolean turn = true,inWhile; 
+  Node Whiletemp;
 
   World(int row, int column) {
 
@@ -518,7 +522,7 @@ class World {
       } else if (args.ifType == false && !turn  ) {  //if turn is false line  then 
         Node temp = lastAccess.left;  //next node is left node 
         lastAccess = temp;
-      } else if (lastAccess.ifType == true && lastAccess.command.equals("IF isBlocked()" )   ) {
+      } else if (lastAccess.ifType == true && lastAccess.command.equals("IF isBlocked()" ) && args.whileType == false ) {
         turn= this.isBlocked();  //calculate turn to collect 
         if (turn == false) {    //if turn is false line then 
           Node temp = lastAccess.left; //next node is left node 
@@ -527,9 +531,27 @@ class World {
           Node temp = lastAccess.right;    //next node is right node
           lastAccess = temp;
         }
-      }
+      } else if (args.whileType == true ){
+        Whiletemp = lastAccess;
+        inWhile = true;
+        turn = this.isBlocked();  //calculate turn to collect 
+        if (turn == false) {    //if turn is false line then 
+          Node temp = lastAccess.left; //next node is left node 
+          lastAccess = temp;
+          inWhile = false;
+        } else if (turn) {      //if turn is true line then 
+          Node temp = lastAccess.right;    //next node is right node
+          lastAccess = temp;
+          inWhile = true;
+        }
+      }  
+      
+      if (lastAccess == null && inWhile == true){
+          lastAccess = Whiletemp;
+      } 
+      
       println(args.command);
-    }
+    } 
   }
 
 
