@@ -2,7 +2,7 @@ class Node {
 
 
   String command = null;  //Set command as attribute to collect command 
-  boolean ifType,whileType;          //Set ifType to collect is it "IF" in flowchart
+  boolean ifType = false ,whileType = false;          //Set ifType to collect is it "IF" in flowchart
   Node endTrueNode = null;    //Set endTrueNode as attribute to collect endTrueNode
   Node left = null;    //Set left as attribute to link to left node
   Node right = null; //Set right as attribute to link to right node
@@ -25,8 +25,7 @@ class Node {
   }
   
   Node(String condition, String command){
-    this.command = "IF "+condition;
-    ifType = true;
+    this.command = "WHILE "+condition;
     whileType = true;
     right = new Node(command);
     endTrueNode = right; 

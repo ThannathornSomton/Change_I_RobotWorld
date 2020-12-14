@@ -4,16 +4,20 @@ Flowchart myFlowchart = new Flowchart();
 void setup() {
   size(720, 720);
   myRobotWorld = new World(12,12);
-  //Flowchart mySub = new Flowchart();
+  Flowchart mySub = new Flowchart();
   myFlowchart.addWHILEcommand("isBlocked()", "turnLeft()");
   myFlowchart.addFalseCommand("move()");
   //myFlowchart.addIFcommand("isBlocked()", "turnLeft()", "move()");
 
   myFlowchart.addTrueCommand("turnRight()"); 
-  myFlowchart.addTrueCommand("turnLeft()");
-  myFlowchart.addTrueCommand("turnRight()");
-  //mySub.addIFcommand("isBlocked()", "turnLeft()", "move()");
-  //myFlowchart.addTrueCommand(mySub);
+  //myFlowchart.addTrueCommand("turnLeft()");
+  
+  mySub.addIFcommand("isBlocked()", "turnLeft()", "move()");
+  myFlowchart.addTrueCommand(mySub);
+  //myFlowchart.addTrueCommand("turnRight()");
+  
+  
+  //myFlowchart.getFlow();
 }
 
 void draw() {
@@ -490,19 +494,18 @@ class World {
     /////////////////////////////////////////////////////
    if (frameCount >50) { //delay time before start 
       getFlow(lastAccess);  //find next node to do 
+      println("7");
       if (lastAccess != null) {  //if have command to do 
         doCommand(lastAccess.command); //then do that belong to command 
+        println("8");
       }
       else {
-        if(myFlow.lastIF.endTrueNode.right == null){   //is node is empty 
+
         lastAccess = myFlow.data;    //restart node to do again 
         turn = true;          //reset turn of flowchart
         println();
         println("Start Agian");
-        }
-        else{
-          lastAccess = myFlow.lastIF.endTrueNode;  //if have something to do affter then then do next is endTrueNode
-        }
+        println("9");
       }
     }
   }
@@ -516,14 +519,17 @@ class World {
     //
     /////////////////////////////////////////////////////
     if (args != null ) { //if argument node is not empty then 
-      if (args.ifType == false && turn  ) { //if turn true line 
+      if (args.ifType == false && args.whileType == false  && turn) { //if turn true line 
         Node temp = lastAccess.right;   //next node is right node 
         lastAccess = temp;
-      } else if (args.ifType == false && !turn  ) {  //if turn is false line  then 
+        println("1");
+      } else if (args.ifType == false && args.whileType == false  && !turn) {  //if turn is false line  then 
         Node temp = lastAccess.left;  //next node is left node 
         lastAccess = temp;
-      } else if (lastAccess.ifType == true && lastAccess.command.equals("IF isBlocked()" ) && args.whileType == false ) {
-        turn= this.isBlocked();  //calculate turn to collect 
+        println("2");
+      } else if (lastAccess.ifType == true && args.whileType == false  && lastAccess.command.equals("IF isBlocked()")) {
+        turn= this.isBlocked();  //calculate turn to collect
+        println("3");
         if (turn == false) {    //if turn is false line then 
           Node temp = lastAccess.left; //next node is left node 
           lastAccess = temp;
@@ -531,10 +537,11 @@ class World {
           Node temp = lastAccess.right;    //next node is right node
           lastAccess = temp;
         }
-      } else if (args.whileType == true ){
+      } else if (lastAccess.ifType == false && args.whileType == true  && lastAccess.command.equals("WHILE isBlocked()")){
         Whiletemp = lastAccess;
         inWhile = true;
         turn = this.isBlocked();  //calculate turn to collect 
+        println("4");
         if (turn == false) {    //if turn is false line then 
           Node temp = lastAccess.left; //next node is left node 
           lastAccess = temp;
